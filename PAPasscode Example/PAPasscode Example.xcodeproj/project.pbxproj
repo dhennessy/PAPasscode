@@ -1,0 +1,358 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9208C459162C547900D7B1F7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9208C458162C547900D7B1F7 /* UIKit.framework */; };
+		9208C45B162C547900D7B1F7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9208C45A162C547900D7B1F7 /* Foundation.framework */; };
+		9208C45D162C547900D7B1F7 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9208C45C162C547900D7B1F7 /* CoreGraphics.framework */; };
+		9208C463162C547900D7B1F7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9208C461162C547900D7B1F7 /* InfoPlist.strings */; };
+		9208C465162C547900D7B1F7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9208C464162C547900D7B1F7 /* main.m */; };
+		9208C469162C547900D7B1F7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9208C468162C547900D7B1F7 /* AppDelegate.m */; };
+		9208C46B162C547900D7B1F7 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 9208C46A162C547900D7B1F7 /* Default.png */; };
+		9208C46D162C547900D7B1F7 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9208C46C162C547900D7B1F7 /* Default@2x.png */; };
+		9208C46F162C547900D7B1F7 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9208C46E162C547900D7B1F7 /* Default-568h@2x.png */; };
+		9208C472162C547900D7B1F7 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9208C471162C547900D7B1F7 /* ViewController.m */; };
+		9208C475162C547900D7B1F7 /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9208C473162C547900D7B1F7 /* ViewController_iPhone.xib */; };
+		9208C478162C547900D7B1F7 /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9208C476162C547900D7B1F7 /* ViewController_iPad.xib */; };
+		92471367162CB60D0085CDA3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92471366162CB60D0085CDA3 /* QuartzCore.framework */; };
+		92471370162CCA890085CDA3 /* PAPasscodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9247136F162CCA890085CDA3 /* PAPasscodeViewController.m */; };
+		92471377162CCAB30085CDA3 /* papasscode_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 92471371162CCAB30085CDA3 /* papasscode_background.png */; };
+		92471378162CCAB30085CDA3 /* papasscode_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92471372162CCAB30085CDA3 /* papasscode_background@2x.png */; };
+		92471379162CCAB30085CDA3 /* papasscode_failed_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 92471373162CCAB30085CDA3 /* papasscode_failed_bg.png */; };
+		9247137A162CCAB30085CDA3 /* papasscode_failed_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92471374162CCAB30085CDA3 /* papasscode_failed_bg@2x.png */; };
+		9247137B162CCAB30085CDA3 /* papasscode_marker.png in Resources */ = {isa = PBXBuildFile; fileRef = 92471375162CCAB30085CDA3 /* papasscode_marker.png */; };
+		9247137C162CCAB30085CDA3 /* papasscode_marker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92471376162CCAB30085CDA3 /* papasscode_marker@2x.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		9208C454162C547900D7B1F7 /* PAPasscode Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PAPasscode Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9208C458162C547900D7B1F7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		9208C45A162C547900D7B1F7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		9208C45C162C547900D7B1F7 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		9208C460162C547900D7B1F7 /* PAPasscode Example-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PAPasscode Example-Info.plist"; sourceTree = "<group>"; };
+		9208C462162C547900D7B1F7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		9208C464162C547900D7B1F7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		9208C466162C547900D7B1F7 /* PAPasscode Example-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PAPasscode Example-Prefix.pch"; sourceTree = "<group>"; };
+		9208C467162C547900D7B1F7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		9208C468162C547900D7B1F7 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		9208C46A162C547900D7B1F7 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		9208C46C162C547900D7B1F7 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		9208C46E162C547900D7B1F7 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		9208C470162C547900D7B1F7 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		9208C471162C547900D7B1F7 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		9208C474162C547900D7B1F7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
+		9208C477162C547900D7B1F7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
+		9208C47F162C547900D7B1F7 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		92471366162CB60D0085CDA3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		9247136E162CCA890085CDA3 /* PAPasscodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PAPasscodeViewController.h; path = ../../PAPasscode/PAPasscodeViewController.h; sourceTree = "<group>"; };
+		9247136F162CCA890085CDA3 /* PAPasscodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PAPasscodeViewController.m; path = ../../PAPasscode/PAPasscodeViewController.m; sourceTree = "<group>"; };
+		92471371162CCAB30085CDA3 /* papasscode_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = papasscode_background.png; path = ../../Assets/papasscode_background.png; sourceTree = "<group>"; };
+		92471372162CCAB30085CDA3 /* papasscode_background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "papasscode_background@2x.png"; path = "../../Assets/papasscode_background@2x.png"; sourceTree = "<group>"; };
+		92471373162CCAB30085CDA3 /* papasscode_failed_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = papasscode_failed_bg.png; path = ../../Assets/papasscode_failed_bg.png; sourceTree = "<group>"; };
+		92471374162CCAB30085CDA3 /* papasscode_failed_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "papasscode_failed_bg@2x.png"; path = "../../Assets/papasscode_failed_bg@2x.png"; sourceTree = "<group>"; };
+		92471375162CCAB30085CDA3 /* papasscode_marker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = papasscode_marker.png; path = ../../Assets/papasscode_marker.png; sourceTree = "<group>"; };
+		92471376162CCAB30085CDA3 /* papasscode_marker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "papasscode_marker@2x.png"; path = "../../Assets/papasscode_marker@2x.png"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9208C451162C547900D7B1F7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92471367162CB60D0085CDA3 /* QuartzCore.framework in Frameworks */,
+				9208C459162C547900D7B1F7 /* UIKit.framework in Frameworks */,
+				9208C45B162C547900D7B1F7 /* Foundation.framework in Frameworks */,
+				9208C45D162C547900D7B1F7 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9208C449162C547900D7B1F7 = {
+			isa = PBXGroup;
+			children = (
+				9208C45E162C547900D7B1F7 /* PAPasscode Example */,
+				9208C457162C547900D7B1F7 /* Frameworks */,
+				9208C455162C547900D7B1F7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9208C455162C547900D7B1F7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9208C454162C547900D7B1F7 /* PAPasscode Example.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9208C457162C547900D7B1F7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				92471366162CB60D0085CDA3 /* QuartzCore.framework */,
+				9208C458162C547900D7B1F7 /* UIKit.framework */,
+				9208C45A162C547900D7B1F7 /* Foundation.framework */,
+				9208C45C162C547900D7B1F7 /* CoreGraphics.framework */,
+				9208C47F162C547900D7B1F7 /* SenTestingKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9208C45E162C547900D7B1F7 /* PAPasscode Example */ = {
+			isa = PBXGroup;
+			children = (
+				9247136D162CCA6F0085CDA3 /* PAPasscode */,
+				9208C467162C547900D7B1F7 /* AppDelegate.h */,
+				9208C468162C547900D7B1F7 /* AppDelegate.m */,
+				9208C470162C547900D7B1F7 /* ViewController.h */,
+				9208C471162C547900D7B1F7 /* ViewController.m */,
+				9208C473162C547900D7B1F7 /* ViewController_iPhone.xib */,
+				9208C476162C547900D7B1F7 /* ViewController_iPad.xib */,
+				9208C45F162C547900D7B1F7 /* Supporting Files */,
+			);
+			path = "PAPasscode Example";
+			sourceTree = "<group>";
+		};
+		9208C45F162C547900D7B1F7 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9208C460162C547900D7B1F7 /* PAPasscode Example-Info.plist */,
+				9208C461162C547900D7B1F7 /* InfoPlist.strings */,
+				9208C464162C547900D7B1F7 /* main.m */,
+				9208C466162C547900D7B1F7 /* PAPasscode Example-Prefix.pch */,
+				9208C46A162C547900D7B1F7 /* Default.png */,
+				9208C46C162C547900D7B1F7 /* Default@2x.png */,
+				9208C46E162C547900D7B1F7 /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9247136D162CCA6F0085CDA3 /* PAPasscode */ = {
+			isa = PBXGroup;
+			children = (
+				92471371162CCAB30085CDA3 /* papasscode_background.png */,
+				92471372162CCAB30085CDA3 /* papasscode_background@2x.png */,
+				92471373162CCAB30085CDA3 /* papasscode_failed_bg.png */,
+				92471374162CCAB30085CDA3 /* papasscode_failed_bg@2x.png */,
+				92471375162CCAB30085CDA3 /* papasscode_marker.png */,
+				92471376162CCAB30085CDA3 /* papasscode_marker@2x.png */,
+				9247136E162CCA890085CDA3 /* PAPasscodeViewController.h */,
+				9247136F162CCA890085CDA3 /* PAPasscodeViewController.m */,
+			);
+			name = PAPasscode;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9208C453162C547900D7B1F7 /* PAPasscode Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9208C490162C547900D7B1F7 /* Build configuration list for PBXNativeTarget "PAPasscode Example" */;
+			buildPhases = (
+				9208C450162C547900D7B1F7 /* Sources */,
+				9208C451162C547900D7B1F7 /* Frameworks */,
+				9208C452162C547900D7B1F7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "PAPasscode Example";
+			productName = "PAPasscode Example";
+			productReference = 9208C454162C547900D7B1F7 /* PAPasscode Example.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9208C44B162C547900D7B1F7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = "Peer Assembly";
+			};
+			buildConfigurationList = 9208C44E162C547900D7B1F7 /* Build configuration list for PBXProject "PAPasscode Example" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 9208C449162C547900D7B1F7;
+			productRefGroup = 9208C455162C547900D7B1F7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9208C453162C547900D7B1F7 /* PAPasscode Example */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9208C452162C547900D7B1F7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9208C463162C547900D7B1F7 /* InfoPlist.strings in Resources */,
+				9208C46B162C547900D7B1F7 /* Default.png in Resources */,
+				9208C46D162C547900D7B1F7 /* Default@2x.png in Resources */,
+				9208C46F162C547900D7B1F7 /* Default-568h@2x.png in Resources */,
+				9208C475162C547900D7B1F7 /* ViewController_iPhone.xib in Resources */,
+				9208C478162C547900D7B1F7 /* ViewController_iPad.xib in Resources */,
+				92471377162CCAB30085CDA3 /* papasscode_background.png in Resources */,
+				92471378162CCAB30085CDA3 /* papasscode_background@2x.png in Resources */,
+				92471379162CCAB30085CDA3 /* papasscode_failed_bg.png in Resources */,
+				9247137A162CCAB30085CDA3 /* papasscode_failed_bg@2x.png in Resources */,
+				9247137B162CCAB30085CDA3 /* papasscode_marker.png in Resources */,
+				9247137C162CCAB30085CDA3 /* papasscode_marker@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9208C450162C547900D7B1F7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9208C465162C547900D7B1F7 /* main.m in Sources */,
+				9208C469162C547900D7B1F7 /* AppDelegate.m in Sources */,
+				9208C472162C547900D7B1F7 /* ViewController.m in Sources */,
+				92471370162CCA890085CDA3 /* PAPasscodeViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		9208C461162C547900D7B1F7 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9208C462162C547900D7B1F7 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		9208C473162C547900D7B1F7 /* ViewController_iPhone.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9208C474162C547900D7B1F7 /* en */,
+			);
+			name = ViewController_iPhone.xib;
+			sourceTree = "<group>";
+		};
+		9208C476162C547900D7B1F7 /* ViewController_iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9208C477162C547900D7B1F7 /* en */,
+			);
+			name = ViewController_iPad.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		9208C48E162C547900D7B1F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9208C48F162C547900D7B1F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9208C491162C547900D7B1F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PAPasscode Example/PAPasscode Example-Prefix.pch";
+				INFOPLIST_FILE = "PAPasscode Example/PAPasscode Example-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		9208C492162C547900D7B1F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PAPasscode Example/PAPasscode Example-Prefix.pch";
+				INFOPLIST_FILE = "PAPasscode Example/PAPasscode Example-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9208C44E162C547900D7B1F7 /* Build configuration list for PBXProject "PAPasscode Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9208C48E162C547900D7B1F7 /* Debug */,
+				9208C48F162C547900D7B1F7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9208C490162C547900D7B1F7 /* Build configuration list for PBXNativeTarget "PAPasscode Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9208C491162C547900D7B1F7 /* Debug */,
+				9208C492162C547900D7B1F7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9208C44B162C547900D7B1F7 /* Project object */;
+}

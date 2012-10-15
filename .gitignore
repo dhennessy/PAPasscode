@@ -1,0 +1,7 @@
+# MAC NOISE ===========
+
+.DS_Store
+Releases/
+project.xcworkspace
+xcuserdata
+build
