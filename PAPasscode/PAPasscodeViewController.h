@@ -30,6 +30,7 @@ typedef enum {
 @end
 
 @interface PAPasscodeViewController : UIViewController {
+    UIView *contentView;
     NSInteger phase;
     UILabel *promptLabel;
     UILabel *messageLabel;

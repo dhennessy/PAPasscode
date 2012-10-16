@@ -9,6 +9,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "PAPasscodeViewController.h"
 
+#define NAVBAR_HEIGHT   44
 #define PROMPT_HEIGHT   74
 #define DIGIT_SPACING   10
 #define DIGIT_WIDTH     61
@@ -65,26 +66,34 @@
 
 - (void)loadView {
     UIView *view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
-    view.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
+    
+    UINavigationBar *navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, view.bounds.size.width, NAVBAR_HEIGHT)];
+    navigationBar.items = @[self.navigationItem];
+    [view addSubview:navigationBar];
+    
+    contentView = [[UIView alloc] initWithFrame:CGRectMake(0, NAVBAR_HEIGHT, view.bounds.size.width, view.bounds.size.height-NAVBAR_HEIGHT)];
+    contentView.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
+    [view addSubview:contentView];
+    
     passcodeTextField = [[UITextField alloc] initWithFrame:CGRectZero];
     passcodeTextField.keyboardType = UIKeyboardTypeNumberPad;
     [passcodeTextField addTarget:self action:@selector(passcodeChanged:) forControlEvents:UIControlEventEditingChanged];
-    [view addSubview:passcodeTextField];
+    [contentView addSubview:passcodeTextField];
     
     UIImage *backgroundImage = [UIImage imageNamed:@"papasscode_background"];
     UIImage *markerImage = [UIImage imageNamed:@"papasscode_marker"];
-    CGFloat xLeft = (view.bounds.size.width - (DIGIT_WIDTH*4 + DIGIT_SPACING*3)) / 2;
+    CGFloat xLeft = (contentView.bounds.size.width - (DIGIT_WIDTH*4 + DIGIT_SPACING*3)) / 2;
     for (int i=0;i<4;i++) {
         UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:backgroundImage];
         backgroundImageView.frame = CGRectOffset(backgroundImageView.frame, xLeft, PROMPT_HEIGHT);
-        [view addSubview:backgroundImageView];
+        [contentView addSubview:backgroundImageView];
         digitImageViews[i] = [[UIImageView alloc] initWithImage:markerImage];
         digitImageViews[i].frame = CGRectOffset(digitImageViews[i].frame, backgroundImageView.frame.origin.x+MARKER_X, backgroundImageView.frame.origin.y+MARKER_Y);
-        [view addSubview:digitImageViews[i]];
+        [contentView addSubview:digitImageViews[i]];
         xLeft += DIGIT_SPACING + backgroundImage.size.width;
     }
     
-    promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, view.bounds.size.width, PROMPT_HEIGHT)];
+    promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, contentView.bounds.size.width, PROMPT_HEIGHT)];
     promptLabel.backgroundColor = [UIColor clearColor];
     promptLabel.textColor = [UIColor colorWithRed:0.30 green:0.34 blue:0.42 alpha:1.0];
     promptLabel.font = [UIFont boldSystemFontOfSize:17];
@@ -92,9 +101,9 @@
     promptLabel.shadowOffset = CGSizeMake(0, 1);
     promptLabel.textAlignment = UITextAlignmentCenter;
     promptLabel.numberOfLines = 0;
-    [view addSubview:promptLabel];
+    [contentView addSubview:promptLabel];
     
-    messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, PROMPT_HEIGHT+DIGIT_HEIGHT, view.bounds.size.width, MESSAGE_HEIGHT)];
+    messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, PROMPT_HEIGHT+DIGIT_HEIGHT, contentView.bounds.size.width, MESSAGE_HEIGHT)];
     messageLabel.backgroundColor = [UIColor clearColor];
     messageLabel.textColor = [UIColor colorWithRed:0.30 green:0.34 blue:0.42 alpha:1.0];
     messageLabel.font = [UIFont systemFontOfSize:14];
@@ -103,12 +112,12 @@
     messageLabel.textAlignment = UITextAlignmentCenter;
     messageLabel.numberOfLines = 0;
 	messageLabel.text = _message;
-    [view addSubview:messageLabel];
+    [contentView addSubview:messageLabel];
         
     UIImage *failedBg = [[UIImage imageNamed:@"papasscode_failed_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, FAILED_LCAP, 0, FAILED_RCAP)];
     failedImageView = [[UIImageView alloc] initWithImage:failedBg];
     failedImageView.hidden = YES;
-    [view addSubview:failedImageView];
+    [contentView addSubview:failedImageView];
     
     failedAttemptsLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     failedAttemptsLabel.backgroundColor = [UIColor clearColor];
@@ -118,7 +127,7 @@
     failedAttemptsLabel.shadowOffset = CGSizeMake(0, -1);
     failedAttemptsLabel.textAlignment = UITextAlignmentCenter;
     failedAttemptsLabel.hidden = YES;
-    [view addSubview:failedAttemptsLabel];
+    [contentView addSubview:failedAttemptsLabel];
     
     self.view = view;
 }

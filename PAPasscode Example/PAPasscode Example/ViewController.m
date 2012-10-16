@@ -17,8 +17,7 @@
 - (IBAction)setPasscode:(id)sender {
     PAPasscodeViewController *passcodeViewController = [[PAPasscodeViewController alloc] initForAction:PasscodeActionSet];
     passcodeViewController.delegate = self;
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:passcodeViewController];
-    [self presentViewController:navController animated:YES completion:nil];
+    [self presentViewController:passcodeViewController animated:YES completion:nil];
 }
 
 - (IBAction)enterPasscode:(id)sender {
@@ -26,16 +25,14 @@
     passcodeViewController.delegate = self;
     passcodeViewController.passcode = _passcodeLabel.text;
     passcodeViewController.failedAttempts = 7;
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:passcodeViewController];
-    [self presentViewController:navController animated:YES completion:nil];
+    [self presentViewController:passcodeViewController animated:YES completion:nil];
 }
 
 - (IBAction)changePasscode:(id)sender {
     PAPasscodeViewController *passcodeViewController = [[PAPasscodeViewController alloc] initForAction:PasscodeActionChange];
     passcodeViewController.delegate = self;
     passcodeViewController.passcode = _passcodeLabel.text;
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:passcodeViewController];
-    [self presentViewController:navController animated:YES completion:nil];
+    [self presentViewController:passcodeViewController animated:YES completion:nil];
 }
 
 #pragma mark - PAPasscodeViewControllerDelegate
