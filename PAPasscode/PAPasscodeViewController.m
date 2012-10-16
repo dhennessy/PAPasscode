@@ -23,11 +23,13 @@
 #define FAILED_RCAP     19
 #define FAILED_HEIGHT   26
 #define FAILED_MARGIN   10
+#define TEXTFIELD_MARGIN 8
 #define SLIDE_DURATION  0.3
 
 @interface PAPasscodeViewController ()
 - (void)cancel:(id)sender;
 - (void)handleFailedAttempt;
+- (void)handleCompleteField;
 - (void)passcodeChanged:(id)sender;
 - (void)resetFailedAttempts;
 - (void)showFailedAttempts;
@@ -60,7 +62,11 @@
                 break;
         }
         self.modalPresentationStyle = UIModalPresentationFormSheet;
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
+        if (_simple) {
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
+        } else {
+            self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
+        }
     }
     return self;
 }
@@ -79,30 +85,52 @@
     contentView.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
     [view addSubview:contentView];
     
-    passcodeTextField = [[UITextField alloc] initWithFrame:CGRectZero];
+    CGFloat panelWidth = DIGIT_WIDTH*4+DIGIT_SPACING*3;
+    if (_simple) {
+        UIView *digitPanel = [[UIView alloc] initWithFrame:CGRectMake(0, 0, panelWidth, DIGIT_HEIGHT)];
+        digitPanel.frame = CGRectOffset(digitPanel.frame, (contentView.bounds.size.width-digitPanel.bounds.size.width)/2, PROMPT_HEIGHT);
+        digitPanel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
+        [contentView addSubview:digitPanel];
+        
+        UIImage *backgroundImage = [UIImage imageNamed:@"papasscode_background"];
+        UIImage *markerImage = [UIImage imageNamed:@"papasscode_marker"];
+        CGFloat xLeft = 0;
+        for (int i=0;i<4;i++) {
+            UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:backgroundImage];
+            backgroundImageView.frame = CGRectOffset(backgroundImageView.frame, xLeft, 0);
+            [digitPanel addSubview:backgroundImageView];
+            digitImageViews[i] = [[UIImageView alloc] initWithImage:markerImage];
+            digitImageViews[i].autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
+            digitImageViews[i].frame = CGRectOffset(digitImageViews[i].frame, backgroundImageView.frame.origin.x+MARKER_X, MARKER_Y);
+            [digitPanel addSubview:digitImageViews[i]];
+            xLeft += DIGIT_SPACING + backgroundImage.size.width;
+        }
+        passcodeTextField = [[UITextField alloc] initWithFrame:digitPanel.frame];
+        passcodeTextField.hidden = YES;
+    } else {
+        UIView *passcodePanel = [[UIView alloc] initWithFrame:CGRectMake(0, 0, panelWidth, DIGIT_HEIGHT)];
+        passcodePanel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
+        passcodePanel.frame = CGRectOffset(passcodePanel.frame, (contentView.bounds.size.width-passcodePanel.bounds.size.width)/2, PROMPT_HEIGHT);
+        passcodePanel.frame = CGRectInset(passcodePanel.frame, TEXTFIELD_MARGIN, TEXTFIELD_MARGIN);
+        passcodePanel.layer.borderColor = [UIColor colorWithRed:0.65 green:0.67 blue:0.70 alpha:1.0].CGColor;
+        passcodePanel.layer.borderWidth = 1.0;
+        passcodePanel.layer.cornerRadius = 5.0;
+        passcodePanel.layer.shadowColor = [UIColor whiteColor].CGColor;
+        passcodePanel.layer.shadowOffset = CGSizeMake(0, 1);
+        passcodePanel.layer.shadowOpacity = 1.0;
+        passcodePanel.layer.shadowRadius = 1.0;
+        passcodePanel.backgroundColor = [UIColor whiteColor];
+        [contentView addSubview:passcodePanel];
+        passcodeTextField = [[UITextField alloc] initWithFrame:CGRectInset(passcodePanel.frame, 6, 6)];
+    }
+    passcodeTextField.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
+    passcodeTextField.borderStyle = UITextBorderStyleNone;
+    passcodeTextField.secureTextEntry = YES;
+    passcodeTextField.textColor = [UIColor colorWithRed:0.23 green:0.33 blue:0.52 alpha:1.0];
     passcodeTextField.keyboardType = UIKeyboardTypeNumberPad;
     [passcodeTextField addTarget:self action:@selector(passcodeChanged:) forControlEvents:UIControlEventEditingChanged];
     [contentView addSubview:passcodeTextField];
-    
-    UIView *digitPanel = [[UIView alloc] initWithFrame:CGRectMake(0, 0, DIGIT_WIDTH*4+DIGIT_SPACING*3, DIGIT_HEIGHT)];
-    digitPanel.frame = CGRectOffset(digitPanel.frame, (contentView.bounds.size.width-digitPanel.bounds.size.width)/2, PROMPT_HEIGHT);
-    digitPanel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
-    [contentView addSubview:digitPanel];
-    
-    UIImage *backgroundImage = [UIImage imageNamed:@"papasscode_background"];
-    UIImage *markerImage = [UIImage imageNamed:@"papasscode_marker"];
-    CGFloat xLeft = 0;
-    for (int i=0;i<4;i++) {
-        UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:backgroundImage];
-        backgroundImageView.frame = CGRectOffset(backgroundImageView.frame, xLeft, 0);
-        [digitPanel addSubview:backgroundImageView];
-        digitImageViews[i] = [[UIImageView alloc] initWithImage:markerImage];
-        digitImageViews[i].autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
-        digitImageViews[i].frame = CGRectOffset(digitImageViews[i].frame, backgroundImageView.frame.origin.x+MARKER_X, MARKER_Y);
-        [digitPanel addSubview:digitImageViews[i]];
-        xLeft += DIGIT_SPACING + backgroundImage.size.width;
-    }
-    
+
     promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, contentView.bounds.size.width, PROMPT_HEIGHT)];
     promptLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     promptLabel.backgroundColor = [UIColor clearColor];
@@ -170,6 +198,65 @@
 
 #pragma mark - implementation helpers
 
+- (void)handleCompleteField {
+    NSString *text = passcodeTextField.text;
+    switch (_action) {
+        case PasscodeActionSet:
+            if (phase == 0) {
+                _passcode = text;
+                messageLabel.text = @"";
+                [self showScreenForPhase:1 animated:YES];
+            } else {
+                if ([text isEqualToString:_passcode]) {
+                    if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidSetPasscode:)]) {
+                        [_delegate PAPasscodeViewControllerDidSetPasscode:self];
+                    }
+                } else {
+                    [self showScreenForPhase:0 animated:YES];
+                    messageLabel.text = NSLocalizedString(@"Passcodes did not match. Try again.", nil);
+                }
+            }
+            break;
+            
+        case PasscodeActionEnter:
+            if ([text isEqualToString:_passcode]) {
+                [self resetFailedAttempts];
+                if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidEnterPasscode:)]) {
+                    [_delegate PAPasscodeViewControllerDidEnterPasscode:self];
+                }
+            } else {
+                [self handleFailedAttempt];
+                [self showScreenForPhase:0 animated:NO];
+            }
+            break;
+            
+        case PasscodeActionChange:
+            if (phase == 0) {
+                if ([text isEqualToString:_passcode]) {
+                    [self resetFailedAttempts];
+                    [self showScreenForPhase:1 animated:YES];
+                } else {
+                    [self handleFailedAttempt];
+                    [self showScreenForPhase:0 animated:NO];
+                }
+            } else if (phase == 1) {
+                _passcode = text;
+                messageLabel.text = @"";
+                [self showScreenForPhase:2 animated:YES];
+            } else {
+                if ([text isEqualToString:_passcode]) {
+                    if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidChangePasscode:)]) {
+                        [_delegate PAPasscodeViewControllerDidChangePasscode:self];
+                    }
+                } else {
+                    [self showScreenForPhase:1 animated:YES];
+                    messageLabel.text = NSLocalizedString(@"Passcodes did not match. Try again.", nil);
+                }
+            }
+            break;
+    }
+}
+
 - (void)handleFailedAttempt {
     _failedAttempts++;
     [self showFailedAttempts];
@@ -206,69 +293,18 @@
 
 - (void)passcodeChanged:(id)sender {
     NSString *text = passcodeTextField.text;
-    if ([text length] > 4) {
-        text = [text substringToIndex:4];
-    }
-    for (int i=0;i<4;i++) {
-        digitImageViews[i].hidden = i >= [text length];
-    }
-    if ([text length] < 4) {
-        return;
-    }
-    switch (_action) {
-        case PasscodeActionSet:
-            if (phase == 0) {
-                _passcode = text;
-                messageLabel.text = @"";
-                [self showScreenForPhase:1 animated:YES];
-            } else {
-                if ([text isEqualToString:_passcode]) {
-                    if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidSetPasscode:)]) {
-                        [_delegate PAPasscodeViewControllerDidSetPasscode:self];
-                    }
-                } else {
-                    [self showScreenForPhase:0 animated:YES];
-                    messageLabel.text = NSLocalizedString(@"Passcodes did not match. Try again.", nil);
-                }
-            }
-            break;
-
-        case PasscodeActionEnter:
-            if ([text isEqualToString:_passcode]) {
-                [self resetFailedAttempts];
-                if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidEnterPasscode:)]) {
-                    [_delegate PAPasscodeViewControllerDidEnterPasscode:self];
-                }
-            } else {
-                [self handleFailedAttempt];
-                [self showScreenForPhase:0 animated:NO];
-            }
-            break;
-
-        case PasscodeActionChange:
-            if (phase == 0) {
-                if ([text isEqualToString:_passcode]) {
-                    [self resetFailedAttempts];
-                    [self showScreenForPhase:1 animated:YES];
-                } else {
-                    [self handleFailedAttempt];
-                    [self showScreenForPhase:0 animated:NO];
-                }
-            } else if (phase == 1) {
-                _passcode = text;
-                messageLabel.text = @"";
-                [self showScreenForPhase:2 animated:YES];
-            } else {
-                if ([text isEqualToString:_passcode]) {
-                    if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidChangePasscode:)]) {
-                        [_delegate PAPasscodeViewControllerDidChangePasscode:self];
-                    }
-                } else {
-                    [self showScreenForPhase:1 animated:YES];
-                    messageLabel.text = NSLocalizedString(@"Passcodes did not match. Try again.", nil);
-                }
-            }
-            break;
+    if (_simple) {
+        if ([text length] > 4) {
+            text = [text substringToIndex:4];
+        }
+        for (int i=0;i<4;i++) {
+            digitImageViews[i].hidden = i >= [text length];
+        }
+        if ([text length] == 4) {
+            [self handleCompleteField];
+        }
+    } else {
+        self.navigationItem.rightBarButtonItem.enabled = [text length] > 0;
     }
 }
 
@@ -285,6 +321,17 @@
     }
     phase = newPhase;
     passcodeTextField.text = @"";
+    if (!_simple) {
+        BOOL finalScreen = _action == PasscodeActionSet && phase == 1;
+        finalScreen |= _action == PasscodeActionEnter && phase == 0;
+        finalScreen |= _action == PasscodeActionChange && phase == 2;
+        if (finalScreen) {
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(handleCompleteField)];
+        } else {
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Next", nil) style:UIBarButtonItemStyleBordered target:self action:@selector(handleCompleteField)];
+        }
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+    }
     
     switch (_action) {
         case PasscodeActionSet:

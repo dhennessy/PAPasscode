@@ -17,6 +17,7 @@
 - (IBAction)setPasscode:(id)sender {
     PAPasscodeViewController *passcodeViewController = [[PAPasscodeViewController alloc] initForAction:PasscodeActionSet];
     passcodeViewController.delegate = self;
+    passcodeViewController.simple = _simpleSwitch.on;
     [self presentViewController:passcodeViewController animated:YES completion:nil];
 }
 
@@ -24,7 +25,7 @@
     PAPasscodeViewController *passcodeViewController = [[PAPasscodeViewController alloc] initForAction:PasscodeActionEnter];
     passcodeViewController.delegate = self;
     passcodeViewController.passcode = _passcodeLabel.text;
-    passcodeViewController.failedAttempts = 7;
+    passcodeViewController.simple = _simpleSwitch.on;
     [self presentViewController:passcodeViewController animated:YES completion:nil];
 }
 
@@ -32,6 +33,7 @@
     PAPasscodeViewController *passcodeViewController = [[PAPasscodeViewController alloc] initForAction:PasscodeActionChange];
     passcodeViewController.delegate = self;
     passcodeViewController.passcode = _passcodeLabel.text;
+    passcodeViewController.simple = _simpleSwitch.on;
     [self presentViewController:passcodeViewController animated:YES completion:nil];
 }
 
@@ -59,4 +61,8 @@
     }];
 }
 
+- (void)viewDidUnload {
+    [self setSimpleSwitch:nil];
+    [super viewDidUnload];
+}
 @end

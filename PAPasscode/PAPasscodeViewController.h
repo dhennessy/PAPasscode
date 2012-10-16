@@ -44,6 +44,7 @@ typedef enum {
 @property (readonly) PasscodeAction action;
 @property (weak) id<PAPasscodeViewControllerDelegate> delegate;
 @property (strong) NSString *passcode;
+@property (assign) BOOL simple;
 @property (assign) NSInteger failedAttempts;
 @property (strong) NSString *enterPrompt;
 @property (strong) NSString *confirmPrompt;
