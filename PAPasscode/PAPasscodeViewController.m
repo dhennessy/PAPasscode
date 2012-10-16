@@ -59,6 +59,7 @@
                 _confirmPrompt = NSLocalizedString(@"Re-enter your new passcode", nil);
                 break;
         }
+        self.modalPresentationStyle = UIModalPresentationFormSheet;
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     }
     return self;
@@ -66,12 +67,15 @@
 
 - (void)loadView {
     UIView *view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
-    
+    view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+
     UINavigationBar *navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, view.bounds.size.width, NAVBAR_HEIGHT)];
+    navigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     navigationBar.items = @[self.navigationItem];
     [view addSubview:navigationBar];
     
     contentView = [[UIView alloc] initWithFrame:CGRectMake(0, NAVBAR_HEIGHT, view.bounds.size.width, view.bounds.size.height-NAVBAR_HEIGHT)];
+    contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     contentView.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
     [view addSubview:contentView];
     
@@ -80,20 +84,27 @@
     [passcodeTextField addTarget:self action:@selector(passcodeChanged:) forControlEvents:UIControlEventEditingChanged];
     [contentView addSubview:passcodeTextField];
     
+    UIView *digitPanel = [[UIView alloc] initWithFrame:CGRectMake(0, 0, DIGIT_WIDTH*4+DIGIT_SPACING*3, DIGIT_HEIGHT)];
+    digitPanel.frame = CGRectOffset(digitPanel.frame, (contentView.bounds.size.width-digitPanel.bounds.size.width)/2, PROMPT_HEIGHT);
+    digitPanel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
+    [contentView addSubview:digitPanel];
+    
     UIImage *backgroundImage = [UIImage imageNamed:@"papasscode_background"];
     UIImage *markerImage = [UIImage imageNamed:@"papasscode_marker"];
-    CGFloat xLeft = (contentView.bounds.size.width - (DIGIT_WIDTH*4 + DIGIT_SPACING*3)) / 2;
+    CGFloat xLeft = 0;
     for (int i=0;i<4;i++) {
         UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:backgroundImage];
-        backgroundImageView.frame = CGRectOffset(backgroundImageView.frame, xLeft, PROMPT_HEIGHT);
-        [contentView addSubview:backgroundImageView];
+        backgroundImageView.frame = CGRectOffset(backgroundImageView.frame, xLeft, 0);
+        [digitPanel addSubview:backgroundImageView];
         digitImageViews[i] = [[UIImageView alloc] initWithImage:markerImage];
-        digitImageViews[i].frame = CGRectOffset(digitImageViews[i].frame, backgroundImageView.frame.origin.x+MARKER_X, backgroundImageView.frame.origin.y+MARKER_Y);
-        [contentView addSubview:digitImageViews[i]];
+        digitImageViews[i].autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
+        digitImageViews[i].frame = CGRectOffset(digitImageViews[i].frame, backgroundImageView.frame.origin.x+MARKER_X, MARKER_Y);
+        [digitPanel addSubview:digitImageViews[i]];
         xLeft += DIGIT_SPACING + backgroundImage.size.width;
     }
     
     promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, contentView.bounds.size.width, PROMPT_HEIGHT)];
+    promptLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     promptLabel.backgroundColor = [UIColor clearColor];
     promptLabel.textColor = [UIColor colorWithRed:0.30 green:0.34 blue:0.42 alpha:1.0];
     promptLabel.font = [UIFont boldSystemFontOfSize:17];
@@ -104,6 +115,7 @@
     [contentView addSubview:promptLabel];
     
     messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, PROMPT_HEIGHT+DIGIT_HEIGHT, contentView.bounds.size.width, MESSAGE_HEIGHT)];
+    messageLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     messageLabel.backgroundColor = [UIColor clearColor];
     messageLabel.textColor = [UIColor colorWithRed:0.30 green:0.34 blue:0.42 alpha:1.0];
     messageLabel.font = [UIFont systemFontOfSize:14];
@@ -116,10 +128,12 @@
         
     UIImage *failedBg = [[UIImage imageNamed:@"papasscode_failed_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, FAILED_LCAP, 0, FAILED_RCAP)];
     failedImageView = [[UIImageView alloc] initWithImage:failedBg];
+    failedImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
     failedImageView.hidden = YES;
     [contentView addSubview:failedImageView];
     
     failedAttemptsLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    failedAttemptsLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
     failedAttemptsLabel.backgroundColor = [UIColor clearColor];
     failedAttemptsLabel.textColor = [UIColor whiteColor];
     failedAttemptsLabel.font = [UIFont boldSystemFontOfSize:15];
@@ -144,6 +158,10 @@
     [super viewWillAppear:animated];
     [self showScreenForPhase:0 animated:NO];
     [passcodeTextField becomeFirstResponder];
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait|UIInterfaceOrientationMaskPortraitUpsideDown;
 }
 
 - (void)cancel:(id)sender {
@@ -178,7 +196,7 @@
     }
     [failedAttemptsLabel sizeToFit];
     CGFloat bgWidth = failedAttemptsLabel.bounds.size.width + FAILED_MARGIN*2;
-    CGFloat x = floor((self.view.bounds.size.width-bgWidth)/2);
+    CGFloat x = floor((contentView.bounds.size.width-bgWidth)/2);
     CGFloat y = PROMPT_HEIGHT+DIGIT_HEIGHT+floor((MESSAGE_HEIGHT-FAILED_HEIGHT)/2);
     failedImageView.frame = CGRectMake(x, y, bgWidth, FAILED_HEIGHT);
     x = failedImageView.frame.origin.x+FAILED_MARGIN;
@@ -257,14 +275,13 @@
 - (void)showScreenForPhase:(NSInteger)newPhase animated:(BOOL)animated {
     CGFloat dir = (newPhase > phase) ? 1 : -1;
     if (animated) {
-        
         UIGraphicsBeginImageContext(self.view.bounds.size);
-        [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+        [contentView.layer renderInContext:UIGraphicsGetCurrentContext()];
         UIImage *snapshot = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         snapshotImageView = [[UIImageView alloc] initWithImage:snapshot];
-        snapshotImageView.frame = CGRectOffset(snapshotImageView.frame, -self.view.frame.size.width*dir, 0);
-        [self.view addSubview:snapshotImageView];
+        snapshotImageView.frame = CGRectOffset(snapshotImageView.frame, -contentView.frame.size.width*dir, 0);
+        [contentView addSubview:snapshotImageView];
     }
     phase = newPhase;
     passcodeTextField.text = @"";
@@ -296,9 +313,9 @@
         digitImageViews[i].hidden = YES;
     }
     if (animated) {
-        self.view.frame = CGRectOffset(self.view.frame, self.view.frame.size.width*dir, 0);
+        contentView.frame = CGRectOffset(contentView.frame, contentView.frame.size.width*dir, 0);
         [UIView animateWithDuration:SLIDE_DURATION animations:^() {
-            self.view.frame = CGRectOffset(self.view.frame, -self.view.frame.size.width*dir, 0);
+            contentView.frame = CGRectOffset(contentView.frame, -contentView.frame.size.width*dir, 0);
         } completion:^(BOOL finished) {
             [snapshotImageView removeFromSuperview];
             snapshotImageView = nil;
