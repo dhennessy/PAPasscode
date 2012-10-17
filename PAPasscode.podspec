@@ -1,14 +1,14 @@
 Pod::Spec.new do |s|
-  s.name     'PAPasscode'
-  s.version  '0.1.0'
-  s.summary  'A recreation of Apple's Passcode View Controller'
-  s.homepage 'https://github.com/gowalla/AFNetworking'
-  s.authors  {'Denis Hennessy' => 'denis@hennessynet.com'}
-  s.source   :git => 'https://github.com/gowalla/AFNetworking.git',
-             :tag => '0.1.0'
-  
-  s.platforms 'iOS'
-  s.sdk '>= 4.0'
-  
-  s.source_files 'PAPasscode'
+  s.name     = 'PAPasscode'
+  s.version  = '0.0.1'
+  s.summary  = 'A Passcode View Controller for iOS similar to the one in Settings.app'
+  s.homepage = 'https://github.com/dhennessy/PAPasscode'
+  s.authors  = { 'Denis Hennessy' => 'denis@hennessynet.com' }
+  s.source   = { :git => 'https://github.com/dhennessy/PAPasscode.git' } 
+  s.platform = :ios
+  s.requires_arc = true
+
+  s.source_files = 'PAPasscode'
+  s.resources = 'Assets/*.png'
+  s.framework = 'QuartzCore'
 end
