@@ -1,13 +1,12 @@
 # PAPasscode
 
 PAPasscode is a standalone view controller for iOS to allow a user to set, 
-enter or change a passcode. It's design to mimic the behaviour in Settings.app
+enter or change a passcode. It's designed to mimic the behaviour in Settings.app
 while still allowing some customization. It includes a sample project which
 shows how it appears on iPhone and iPad devices.
 
 ![screen1](https://raw.github.com/dhennessy/PAPasscode/master/Screenshots/screen1.png)
 ![screen2](https://raw.github.com/dhennessy/PAPasscode/master/Screenshots/screen2.png)
-![screen3](https://raw.github.com/dhennessy/PAPasscode/master/Screenshots/screen3.png)
 
 Other features:
  *	Supports both simple (PIN-style) and regular passcodes
@@ -51,15 +50,16 @@ Then invoke the view controller as follows:
 ```
 
 The `initForAction:` allows you to specify the flow you'd like. Possible actions are:
- *   PasscodeActionSet - set a new passcode
- *   PasscodeActionEnter - enter an existing passcode
- *   PasscodeActionChange - change an existing passcode
+ *   `PasscodeActionSet` - set a new passcode
+ *   `PasscodeActionEnter` - enter an existing passcode
+ *   `PasscodeActionChange` - change an existing passcode
 
 The included example project demonstrates the each of the flows.
 
- ## License
+## License
 
- Copyright (c) 2012, Denis Hennessy (Peer Assembly - [http://peerassembly.com])
+```
+Copyright (c) 2012, Denis Hennessy (Peer Assembly - http://peerassembly.com)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -83,5 +83,5 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+```
 
