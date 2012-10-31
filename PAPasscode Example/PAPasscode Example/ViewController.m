@@ -25,6 +25,7 @@
     PAPasscodeViewController *passcodeViewController = [[PAPasscodeViewController alloc] initForAction:PasscodeActionEnter];
     passcodeViewController.delegate = self;
     passcodeViewController.passcode = _passcodeLabel.text;
+    passcodeViewController.alternativePasscode = @"9999";
     passcodeViewController.simple = _simpleSwitch.on;
     [self presentViewController:passcodeViewController animated:YES completion:nil];
 }
@@ -41,6 +42,12 @@
 
 - (void)PAPasscodeViewControllerDidCancel:(PAPasscodeViewController *)controller {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)PAPasscodeViewControllerDidEnterAlternativePasscode:(PAPasscodeViewController *)controller {
+    [self dismissViewControllerAnimated:YES completion:^() {
+        [[[UIAlertView alloc] initWithTitle:nil message:@"Alternative Passcode entered correctly" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+    }];
 }
 
 - (void)PAPasscodeViewControllerDidEnterPasscode:(PAPasscodeViewController *)controller {

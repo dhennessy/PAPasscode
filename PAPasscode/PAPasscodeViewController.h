@@ -23,6 +23,7 @@ typedef enum {
 @optional
 
 - (void)PAPasscodeViewControllerDidChangePasscode:(PAPasscodeViewController *)controller;
+- (void)PAPasscodeViewControllerDidEnterAlternativePasscode:(PAPasscodeViewController *)controller;
 - (void)PAPasscodeViewControllerDidEnterPasscode:(PAPasscodeViewController *)controller;
 - (void)PAPasscodeViewControllerDidSetPasscode:(PAPasscodeViewController *)controller;
 - (void)PAPasscodeViewController:(PAPasscodeViewController *)controller didFailToEnterPasscode:(NSInteger)attempts;
@@ -43,6 +44,7 @@ typedef enum {
 
 @property (readonly) PasscodeAction action;
 @property (weak) id<PAPasscodeViewControllerDelegate> delegate;
+@property (strong) NSString *alternativePasscode;
 @property (strong) NSString *passcode;
 @property (assign) BOOL simple;
 @property (assign) NSInteger failedAttempts;

@@ -227,8 +227,15 @@
                     [_delegate PAPasscodeViewControllerDidEnterPasscode:self];
                 }
             } else {
-                [self handleFailedAttempt];
-                [self showScreenForPhase:0 animated:NO];
+                if (_alternativePasscode && [text isEqualToString:_alternativePasscode]) {
+                    [self resetFailedAttempts];
+                    if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidEnterAlternativePasscode:)]) {
+                        [_delegate PAPasscodeViewControllerDidEnterAlternativePasscode:self];
+                    }
+                } else {
+                    [self handleFailedAttempt];
+                    [self showScreenForPhase:0 animated:NO];
+                }
             }
             break;
             
