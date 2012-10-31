@@ -42,6 +42,7 @@ typedef enum {
     UIImageView *snapshotImageView;
 }
 
+@property (strong) UIView *backgroundView;
 @property (readonly) PasscodeAction action;
 @property (weak) id<PAPasscodeViewControllerDelegate> delegate;
 @property (strong) NSString *alternativePasscode;

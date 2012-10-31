@@ -78,6 +78,9 @@
     
     contentView = [[UIView alloc] initWithFrame:CGRectMake(0, NAVBAR_HEIGHT, view.bounds.size.width, view.bounds.size.height-NAVBAR_HEIGHT)];
     contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    if (_backgroundView) {
+        [contentView addSubview:_backgroundView];
+    }
     contentView.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
     [view addSubview:contentView];
     

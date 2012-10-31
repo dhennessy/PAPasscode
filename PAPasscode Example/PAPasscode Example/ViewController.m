@@ -16,6 +16,9 @@
 
 - (IBAction)setPasscode:(id)sender {
     PAPasscodeViewController *passcodeViewController = [[PAPasscodeViewController alloc] initForAction:PasscodeActionSet];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        passcodeViewController.backgroundView = [[UITableView alloc] initWithFrame:[UIScreen mainScreen].bounds style:UITableViewStyleGrouped];
+    }
     passcodeViewController.delegate = self;
     passcodeViewController.simple = _simpleSwitch.on;
     [self presentViewController:passcodeViewController animated:YES completion:nil];
@@ -23,6 +26,9 @@
 
 - (IBAction)enterPasscode:(id)sender {
     PAPasscodeViewController *passcodeViewController = [[PAPasscodeViewController alloc] initForAction:PasscodeActionEnter];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        passcodeViewController.backgroundView = [[UITableView alloc] initWithFrame:[UIScreen mainScreen].bounds style:UITableViewStyleGrouped];
+    }
     passcodeViewController.delegate = self;
     passcodeViewController.passcode = _passcodeLabel.text;
     passcodeViewController.alternativePasscode = @"9999";
@@ -32,6 +38,9 @@
 
 - (IBAction)changePasscode:(id)sender {
     PAPasscodeViewController *passcodeViewController = [[PAPasscodeViewController alloc] initForAction:PasscodeActionChange];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        passcodeViewController.backgroundView = [[UITableView alloc] initWithFrame:[UIScreen mainScreen].bounds style:UITableViewStyleGrouped];
+    }
     passcodeViewController.delegate = self;
     passcodeViewController.passcode = _passcodeLabel.text;
     passcodeViewController.simple = _simpleSwitch.on;
