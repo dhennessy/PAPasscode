@@ -58,12 +58,12 @@ The included example project demonstrates the each of the flows.
 
 ## Contact
 
-The best way to hear about updates to this and other libraries is to follow me on Twitter ([@denishennessy](http://twitter.com/denishennessy)) or App.net ([@denishennessy](http://alpha.app.net/denishennessy)).
+To hear about updates to this and other libraries follow me on Twitter ([@denishennessy](http://twitter.com/denishennessy)) or App.net ([@denishennessy](http://alpha.app.net/denishennessy)).
 
 If you encounter a bug or just thought of a terrific new feature, then opening a github issue is probably the best
 way to share it. Actually, the best way is to send me a pull request...
 
-For anything else, email always works: [denis@peerassembly.com](mailto://denis@peerassembly.com)
+For anything else, email always works: [denis@peerassembly.com](mailto:denis@peerassembly.com)
 
 ## License
 
