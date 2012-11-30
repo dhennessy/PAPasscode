@@ -18,10 +18,9 @@ typedef enum {
 
 @protocol PAPasscodeViewControllerDelegate <NSObject>
 
-- (void)PAPasscodeViewControllerDidCancel:(PAPasscodeViewController *)controller;
-
 @optional
 
+- (void)PAPasscodeViewControllerDidCancel:(PAPasscodeViewController *)controller;
 - (void)PAPasscodeViewControllerDidChangePasscode:(PAPasscodeViewController *)controller;
 - (void)PAPasscodeViewControllerDidEnterAlternativePasscode:(PAPasscodeViewController *)controller;
 - (void)PAPasscodeViewControllerDidEnterPasscode:(PAPasscodeViewController *)controller;

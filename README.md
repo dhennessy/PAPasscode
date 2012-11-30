@@ -56,6 +56,17 @@ The `initForAction:` allows you to specify the flow you'd like. Possible actions
 
 The included example project demonstrates the each of the flows.
 
+## Changelog
+
+### 0.3
+ *  The `PAPasscodeViewControllerDidCancel:` delegate method is now optional. If missing, then the Cancel button will be removed.
+
+### 0.2
+ *  Add property to specify custom background view
+
+### 0.1 
+ *  Initial release
+
 ## Contact
 
 To hear about updates to this and other libraries follow me on Twitter ([@denishennessy](http://twitter.com/denishennessy)) or App.net ([@denishennessy](http://alpha.app.net/denishennessy)).
