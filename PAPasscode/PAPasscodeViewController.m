@@ -243,7 +243,12 @@
             break;
             
         case PasscodeActionEnter:
-            if ([text isEqualToString:_passcode]) {
+			if ((
+				[_delegate respondsToSelector:
+				 @selector(PAPasscodeViewController:checkPasscodeValidityWithEntry:)]) ?
+			   [_delegate PAPasscodeViewController:self checkPasscodeValidityWithEntry:text] :
+			   [text isEqualToString:_passcode])
+				{
                 [self resetFailedAttempts];
                 if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidEnterPasscode:)]) {
                     [_delegate PAPasscodeViewControllerDidEnterPasscode:self];
@@ -263,7 +268,12 @@
             
         case PasscodeActionChange:
             if (phase == 0) {
-                if ([text isEqualToString:_passcode]) {
+                if ((
+					[_delegate respondsToSelector:
+					 @selector(PAPasscodeViewController:checkPasscodeValidityWithEntry:)]) ?
+				   [_delegate PAPasscodeViewController:self checkPasscodeValidityWithEntry:text] :
+				   [text isEqualToString:_passcode])
+				{
                     [self resetFailedAttempts];
                     [self showScreenForPhase:1 animated:YES];
                 } else {
@@ -275,7 +285,12 @@
                 messageLabel.text = @"";
                 [self showScreenForPhase:2 animated:YES];
             } else {
-                if ([text isEqualToString:_passcode]) {
+                if ((
+					 [_delegate respondsToSelector:
+					  @selector(PAPasscodeViewController:checkPasscodeValidityWithEntry:)]) ?
+					[_delegate PAPasscodeViewController:self checkPasscodeValidityWithEntry:text] :
+					[text isEqualToString:_passcode])
+				{
                     if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidChangePasscode:)]) {
                         [_delegate PAPasscodeViewControllerDidChangePasscode:self];
                     }
