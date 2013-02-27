@@ -226,7 +226,12 @@
                 messageLabel.text = @"";
                 [self showScreenForPhase:1 animated:YES];
             } else {
-                if ([text isEqualToString:_passcode]) {
+                if ((
+					 [_delegate respondsToSelector:
+						@selector(PAPasscodeViewController:checkPasscodeValidityWithEntry:)]) ?
+					 [_delegate PAPasscodeViewController:self checkPasscodeValidityWithEntry:_passcode] :
+					 [text isEqualToString:_passcode]) 
+				{
                     if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidSetPasscode:)]) {
                         [_delegate PAPasscodeViewControllerDidSetPasscode:self];
                     }
