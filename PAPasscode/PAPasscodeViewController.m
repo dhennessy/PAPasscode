@@ -229,7 +229,7 @@
                 if ((
 					 [_delegate respondsToSelector:
 						@selector(PAPasscodeViewController:checkPasscodeValidityWithEntry:)]) ?
-					 [_delegate PAPasscodeViewController:self checkPasscodeValidityWithEntry:_passcode] :
+					 [_delegate PAPasscodeViewController:self checkPasscodeValidityWithEntry:text] :
 					 [text isEqualToString:_passcode]) 
 				{
                     if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidSetPasscode:)]) {
