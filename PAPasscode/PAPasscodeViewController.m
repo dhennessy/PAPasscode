@@ -226,11 +226,7 @@
                 messageLabel.text = @"";
                 [self showScreenForPhase:1 animated:YES];
             } else {
-                if ((
-					 [_delegate respondsToSelector:
-						@selector(PAPasscodeViewController:checkPasscodeValidityWithEntry:)]) ?
-					 [_delegate PAPasscodeViewController:self checkPasscodeValidityWithEntry:text] :
-					 [text isEqualToString:_passcode]) 
+                if ([text isEqualToString:_passcode]) 
 				{
                     if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidSetPasscode:)]) {
                         [_delegate PAPasscodeViewControllerDidSetPasscode:self];
@@ -285,11 +281,7 @@
                 messageLabel.text = @"";
                 [self showScreenForPhase:2 animated:YES];
             } else {
-                if ((
-					 [_delegate respondsToSelector:
-					  @selector(PAPasscodeViewController:checkPasscodeValidityWithEntry:)]) ?
-					[_delegate PAPasscodeViewController:self checkPasscodeValidityWithEntry:text] :
-					[text isEqualToString:_passcode])
+                if ([text isEqualToString:_passcode])
 				{
                     if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidChangePasscode:)]) {
                         [_delegate PAPasscodeViewControllerDidChangePasscode:self];
