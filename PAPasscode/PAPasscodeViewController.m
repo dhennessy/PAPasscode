@@ -72,6 +72,7 @@
     view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
 
     UINavigationBar *navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, view.bounds.size.width, NAVBAR_HEIGHT)];
+	navigationBar.barStyle = UIBarStyleBlackOpaque;
     navigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     navigationBar.items = @[self.navigationItem];
     [view addSubview:navigationBar];
