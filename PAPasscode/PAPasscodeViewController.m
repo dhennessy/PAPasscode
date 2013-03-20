@@ -217,7 +217,14 @@
 }
 
 #pragma mark - implementation helpers
-
+-(BOOL)passcodeIsValid:(NSString *)canidate{
+	if ([_delegate respondsToSelector:@selector(PAPasscodeViewController:checkPasscodeValidityWithEntry:)])
+	{
+		return [_delegate PAPasscodeViewController:self checkPasscodeValidityWithEntry:canidate];
+	} else {
+		return [canidate isEqualToString:_passcode];
+	}
+}
 - (void)handleCompleteField {
     NSString *text = passcodeTextField.text;
     switch (_action) {
@@ -240,12 +247,7 @@
             break;
             
         case PasscodeActionEnter:
-			if ((
-				[_delegate respondsToSelector:
-				 @selector(PAPasscodeViewController:checkPasscodeValidityWithEntry:)]) ?
-			   [_delegate PAPasscodeViewController:self checkPasscodeValidityWithEntry:text] :
-			   [text isEqualToString:_passcode])
-				{
+			if ([self passcodeIsValid:text]){
                 [self resetFailedAttempts];
                 if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidEnterPasscode:)]) {
                     [_delegate PAPasscodeViewControllerDidEnterPasscode:self];
