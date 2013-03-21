@@ -18,6 +18,9 @@ typedef enum {
 
 @protocol PAPasscodeViewControllerDelegate <NSObject>
 
+typedef void (^ChallengeSucceedBlock)();
+typedef void (^ChallengeFailedBlock)(NSInteger attempts);
+
 @optional
 
 - (void)PAPasscodeViewControllerDidCancel:(PAPasscodeViewController *)controller;
@@ -52,7 +55,11 @@ typedef enum {
 @property (strong) NSString *confirmPrompt;
 @property (strong) NSString *changePrompt;
 @property (strong) NSString *message;
+@property (strong) ChallengeSucceedBlock success;
+@property (strong) ChallengeFailedBlock failure;
 
 - (id)initForAction:(PasscodeAction)action;
+
+- (id)initForChallenge:(ChallengeSucceedBlock)success failure:(ChallengeFailedBlock)failure;
 
 @end

@@ -25,7 +25,11 @@
 }
 
 - (IBAction)enterPasscode:(id)sender {
-    PAPasscodeViewController *passcodeViewController = [[PAPasscodeViewController alloc] initForAction:PasscodeActionEnter];
+    PAPasscodeViewController *passcodeViewController = [[PAPasscodeViewController alloc] initForChallenge:^{
+        NSLog(@"Passcode entered correctly");
+    } failure:^(NSInteger attempts) {
+        NSLog(@"Passcode entered incorrectly %ld times", (long)attempts);
+    }];
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         passcodeViewController.backgroundView = [[UITableView alloc] initWithFrame:[UIScreen mainScreen].bounds style:UITableViewStyleGrouped];
     }

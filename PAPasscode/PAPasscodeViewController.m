@@ -67,6 +67,16 @@
     return self;
 }
 
+- (id)initForChallenge:(ChallengeSucceedBlock)success failure:(ChallengeFailedBlock)failure
+{
+    self = [self initForAction:PasscodeActionEnter];
+    if (self) {
+        _success = success;
+        _failure = failure;
+    }
+    return self;
+}
+
 - (void)loadView {
     UIView *view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
     view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
@@ -240,12 +250,20 @@
         case PasscodeActionEnter:
             if ([text isEqualToString:_passcode]) {
                 [self resetFailedAttempts];
+                if (_success!=nil)
+                {
+                    _success();
+                }
                 if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidEnterPasscode:)]) {
                     [_delegate PAPasscodeViewControllerDidEnterPasscode:self];
                 }
             } else {
                 if (_alternativePasscode && [text isEqualToString:_alternativePasscode]) {
                     [self resetFailedAttempts];
+                    if (_success!=nil)
+                    {
+                        _success();
+                    }
                     if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidEnterAlternativePasscode:)]) {
                         [_delegate PAPasscodeViewControllerDidEnterAlternativePasscode:self];
                     }
@@ -286,6 +304,10 @@
 - (void)handleFailedAttempt {
     _failedAttempts++;
     [self showFailedAttempts];
+    if (_failure!=nil)
+    {
+        _failure(_failedAttempts);
+    }
     if ([_delegate respondsToSelector:@selector(PAPasscodeViewController:didFailToEnterPasscode:)]) {
         [_delegate PAPasscodeViewController:self didFailToEnterPasscode:_failedAttempts];
     }
