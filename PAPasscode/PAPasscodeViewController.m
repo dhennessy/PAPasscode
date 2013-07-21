@@ -72,19 +72,32 @@
 - (void)loadView {
     UIView *view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
     view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-
-    UINavigationBar *navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, view.bounds.size.width, NAVBAR_HEIGHT)];
-    navigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    navigationBar.items = @[self.navigationItem];
-    [view addSubview:navigationBar];
     
-    contentView = [[UIView alloc] initWithFrame:CGRectMake(0, NAVBAR_HEIGHT, view.bounds.size.width, view.bounds.size.height-NAVBAR_HEIGHT)];
-    contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    if (_backgroundView) {
-        [contentView addSubview:_backgroundView];
+    // Test if parent view controller is UINavigationController
+    if ([self.parentViewController isKindOfClass:[UINavigationController class]]) {
+        // If true, does not add navigation bar
+        contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, view.bounds.size.width, view.bounds.size.height)];
+        contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        if (_backgroundView) {
+            [contentView addSubview:_backgroundView];
+        }
+        contentView.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
+        [view addSubview:contentView];
+    } else {
+        // If false, adds navigation bar
+        UINavigationBar *navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, view.bounds.size.width, NAVBAR_HEIGHT)];
+        navigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        navigationBar.items = @[self.navigationItem];
+        [view addSubview:navigationBar];
+        
+        contentView = [[UIView alloc] initWithFrame:CGRectMake(0, NAVBAR_HEIGHT, view.bounds.size.width, view.bounds.size.height-NAVBAR_HEIGHT)];
+        contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        if (_backgroundView) {
+            [contentView addSubview:_backgroundView];
+        }
+        contentView.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
+        [view addSubview:contentView];
     }
-    contentView.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
-    [view addSubview:contentView];
     
     CGFloat panelWidth = DIGIT_WIDTH*4+DIGIT_SPACING*3;
     if (_simple) {
@@ -131,7 +144,7 @@
     passcodeTextField.keyboardType = UIKeyboardTypeNumberPad;
     [passcodeTextField addTarget:self action:@selector(passcodeChanged:) forControlEvents:UIControlEventEditingChanged];
     [contentView addSubview:passcodeTextField];
-
+    
     promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, contentView.bounds.size.width, PROMPT_HEIGHT)];
     promptLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     promptLabel.backgroundColor = [UIColor clearColor];
@@ -162,7 +175,7 @@
     messageLabel.numberOfLines = 0;
 	messageLabel.text = _message;
     [contentView addSubview:messageLabel];
-        
+    
     UIImage *failedBg = [[UIImage imageNamed:@"papasscode_failed_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, FAILED_LCAP, 0, FAILED_RCAP)];
     failedImageView = [[UIImageView alloc] initWithImage:failedBg];
     failedImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
