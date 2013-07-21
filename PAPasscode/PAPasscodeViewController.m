@@ -8,6 +8,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "PAPasscodeViewController.h"
+#import "MIHashing.h"
 
 #define NAVBAR_HEIGHT   44
 #define PROMPT_HEIGHT   74
@@ -63,6 +64,7 @@
         }
         self.modalPresentationStyle = UIModalPresentationFormSheet;
         _simple = YES;
+        _hashedCode = NO;
     }
     return self;
 }
@@ -219,65 +221,135 @@
 
 - (void)handleCompleteField {
     NSString *text = passcodeTextField.text;
-    switch (_action) {
-        case PasscodeActionSet:
-            if (phase == 0) {
-                _passcode = text;
-                messageLabel.text = @"";
-                [self showScreenForPhase:1 animated:YES];
-            } else {
-                if ([text isEqualToString:_passcode]) {
-                    if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidSetPasscode:)]) {
-                        [_delegate PAPasscodeViewControllerDidSetPasscode:self];
+    
+    switch (_hashedCode) {
+        case YES:
+            switch (_action) {
+                case PasscodeActionSet:
+                    if (phase == 0) {
+                        _passcode = [MIHashing hashForString:text];
+                        messageLabel.text = @"";
+                        [self showScreenForPhase:1 animated:YES];
+                    } else {
+                        if ([[MIHashing hashForString:text] isEqualToString:_passcode]) {
+                            if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidSetPasscode:)]) {
+                                [_delegate PAPasscodeViewControllerDidSetPasscode:self];
+                            }
+                        } else {
+                            [self showScreenForPhase:0 animated:YES];
+                            messageLabel.text = NSLocalizedString(@"Passcodes did not match. Try again.", nil);
+                        }
                     }
-                } else {
-                    [self showScreenForPhase:0 animated:YES];
-                    messageLabel.text = NSLocalizedString(@"Passcodes did not match. Try again.", nil);
-                }
+                    break;
+                    
+                case PasscodeActionEnter:
+                    if ([[MIHashing hashForString:text] isEqualToString:_passcode]) {
+                        [self resetFailedAttempts];
+                        if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidEnterPasscode:)]) {
+                            [_delegate PAPasscodeViewControllerDidEnterPasscode:self];
+                        }
+                    } else {
+                        if (_alternativePasscode && [[MIHashing hashForString:text] isEqualToString:_alternativePasscode]) {
+                            [self resetFailedAttempts];
+                            if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidEnterAlternativePasscode:)]) {
+                                [_delegate PAPasscodeViewControllerDidEnterAlternativePasscode:self];
+                            }
+                        } else {
+                            [self handleFailedAttempt];
+                            [self showScreenForPhase:0 animated:NO];
+                        }
+                    }
+                    break;
+                    
+                case PasscodeActionChange:
+                    if (phase == 0) {
+                        if ([[MIHashing hashForString:text] isEqualToString:_passcode]) {
+                            [self resetFailedAttempts];
+                            [self showScreenForPhase:1 animated:YES];
+                        } else {
+                            [self handleFailedAttempt];
+                            [self showScreenForPhase:0 animated:NO];
+                        }
+                    } else if (phase == 1) {
+                        _passcode = [MIHashing hashForString:text];
+                        messageLabel.text = @"";
+                        [self showScreenForPhase:2 animated:YES];
+                    } else {
+                        if ([[MIHashing hashForString:text] isEqualToString:_passcode]) {
+                            if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidChangePasscode:)]) {
+                                [_delegate PAPasscodeViewControllerDidChangePasscode:self];
+                            }
+                        } else {
+                            [self showScreenForPhase:1 animated:YES];
+                            messageLabel.text = NSLocalizedString(@"Passcodes did not match. Try again.", nil);
+                        }
+                    }
+                    break;
             }
             break;
             
-        case PasscodeActionEnter:
-            if ([text isEqualToString:_passcode]) {
-                [self resetFailedAttempts];
-                if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidEnterPasscode:)]) {
-                    [_delegate PAPasscodeViewControllerDidEnterPasscode:self];
-                }
-            } else {
-                if (_alternativePasscode && [text isEqualToString:_alternativePasscode]) {
-                    [self resetFailedAttempts];
-                    if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidEnterAlternativePasscode:)]) {
-                        [_delegate PAPasscodeViewControllerDidEnterAlternativePasscode:self];
+        case NO:
+            switch (_action) {
+                case PasscodeActionSet:
+                    if (phase == 0) {
+                        _passcode = text;
+                        messageLabel.text = @"";
+                        [self showScreenForPhase:1 animated:YES];
+                    } else {
+                        if ([text isEqualToString:_passcode]) {
+                            if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidSetPasscode:)]) {
+                                [_delegate PAPasscodeViewControllerDidSetPasscode:self];
+                            }
+                        } else {
+                            [self showScreenForPhase:0 animated:YES];
+                            messageLabel.text = NSLocalizedString(@"Passcodes did not match. Try again.", nil);
+                        }
                     }
-                } else {
-                    [self handleFailedAttempt];
-                    [self showScreenForPhase:0 animated:NO];
-                }
-            }
-            break;
-            
-        case PasscodeActionChange:
-            if (phase == 0) {
-                if ([text isEqualToString:_passcode]) {
-                    [self resetFailedAttempts];
-                    [self showScreenForPhase:1 animated:YES];
-                } else {
-                    [self handleFailedAttempt];
-                    [self showScreenForPhase:0 animated:NO];
-                }
-            } else if (phase == 1) {
-                _passcode = text;
-                messageLabel.text = @"";
-                [self showScreenForPhase:2 animated:YES];
-            } else {
-                if ([text isEqualToString:_passcode]) {
-                    if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidChangePasscode:)]) {
-                        [_delegate PAPasscodeViewControllerDidChangePasscode:self];
+                    break;
+                    
+                case PasscodeActionEnter:
+                    if ([text isEqualToString:_passcode]) {
+                        [self resetFailedAttempts];
+                        if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidEnterPasscode:)]) {
+                            [_delegate PAPasscodeViewControllerDidEnterPasscode:self];
+                        }
+                    } else {
+                        if (_alternativePasscode && [text isEqualToString:_alternativePasscode]) {
+                            [self resetFailedAttempts];
+                            if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidEnterAlternativePasscode:)]) {
+                                [_delegate PAPasscodeViewControllerDidEnterAlternativePasscode:self];
+                            }
+                        } else {
+                            [self handleFailedAttempt];
+                            [self showScreenForPhase:0 animated:NO];
+                        }
                     }
-                } else {
-                    [self showScreenForPhase:1 animated:YES];
-                    messageLabel.text = NSLocalizedString(@"Passcodes did not match. Try again.", nil);
-                }
+                    break;
+                    
+                case PasscodeActionChange:
+                    if (phase == 0) {
+                        if ([text isEqualToString:_passcode]) {
+                            [self resetFailedAttempts];
+                            [self showScreenForPhase:1 animated:YES];
+                        } else {
+                            [self handleFailedAttempt];
+                            [self showScreenForPhase:0 animated:NO];
+                        }
+                    } else if (phase == 1) {
+                        _passcode = text;
+                        messageLabel.text = @"";
+                        [self showScreenForPhase:2 animated:YES];
+                    } else {
+                        if ([text isEqualToString:_passcode]) {
+                            if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidChangePasscode:)]) {
+                                [_delegate PAPasscodeViewControllerDidChangePasscode:self];
+                            }
+                        } else {
+                            [self showScreenForPhase:1 animated:YES];
+                            messageLabel.text = NSLocalizedString(@"Passcodes did not match. Try again.", nil);
+                        }
+                    }
+                    break;
             }
             break;
     }

@@ -53,6 +53,10 @@ typedef enum {
 @property (strong) NSString *changePrompt;
 @property (strong) NSString *message;
 
+// Added to allow passcode controller to handle SHA256 hashed passcodes.
+// This is to increase security for passcodes stored locally (i.e. in NSUserDefaults)
+@property (assign) BOOL hashedCode;
+
 - (id)initForAction:(PasscodeAction)action;
 
 @end
