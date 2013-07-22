@@ -128,6 +128,7 @@
     passcodeTextField.textColor = [UIColor colorWithRed:0.23 green:0.33 blue:0.52 alpha:1.0];
     passcodeTextField.keyboardType = UIKeyboardTypeNumberPad;
     [passcodeTextField addTarget:self action:@selector(passcodeChanged:) forControlEvents:UIControlEventEditingChanged];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showKeyboard:) name:UIKeyboardDidHideNotification object:nil];
     [contentView addSubview:passcodeTextField];
 
     promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, contentView.bounds.size.width, PROMPT_HEIGHT)];
@@ -183,6 +184,10 @@
     [contentView addSubview:failedAttemptsLabel];
     
     self.view = view;
+}
+
+- (void)showKeyboard:(id)sender {
+    [passcodeTextField becomeFirstResponder];
 }
 
 - (void)viewDidLoad {
@@ -394,6 +399,10 @@
             snapshotImageView = nil;
         }];
     }
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end
