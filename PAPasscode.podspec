@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name     = 'PAPasscode'
+  s.name     = 'PAPasscodeMM'
   s.version  = '0.2'
   s.summary  = 'A Passcode View Controller for iOS similar to the one in Settings.app'
   s.homepage = 'https://github.com/maximeMachado/PAPasscode'
