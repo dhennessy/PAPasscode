@@ -55,10 +55,10 @@
                 break;
                 
             case PasscodeActionChange:
-                self.title = NSLocalizedString(@"Change Passcode", nil);
-                _changePrompt = NSLocalizedString(@"Enter your old passcode", nil);
-                _enterPrompt = NSLocalizedString(@"Enter your new passcode", nil);
-                _confirmPrompt = NSLocalizedString(@"Re-enter your new passcode", nil);
+                self.title = NSLocalizedString(@"Changer de mot de passe", nil);
+                _changePrompt = NSLocalizedString(@"Entrer votre ancien mot de passe", nil);
+                _enterPrompt = NSLocalizedString(@"Entrer votre nouveau mot de passe", nil);
+                _confirmPrompt = NSLocalizedString(@"Re-entrer votre mot de passe", nil);
                 break;
         }
         self.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -308,9 +308,9 @@
     failedImageView.hidden = NO;
     failedAttemptsLabel.hidden = NO;
     if (_failedAttempts == 1) {
-        failedAttemptsLabel.text = NSLocalizedString(@"1 Failed Passcode Attempt", nil);
+        failedAttemptsLabel.text = NSLocalizedString(@"1 tentative échouée", nil);
     } else {
-        failedAttemptsLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%d Failed Passcode Attempts", nil), _failedAttempts];
+        failedAttemptsLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%d tentatives échouées", nil), _failedAttempts];
     }
     [failedAttemptsLabel sizeToFit];
     CGFloat bgWidth = failedAttemptsLabel.bounds.size.width + FAILED_MARGIN*2;
