@@ -58,6 +58,9 @@ The included example project demonstrates the each of the flows.
 
 ## Changelog
 
+### 1.0
+ *  Update to support auto-layout and change UI to match iOS 7 styling. Note that if you require support for iOS 6, you should stick with version 0.3.
+ 
 ### 0.3
  *  The `PAPasscodeViewControllerDidCancel:` delegate method is now optional. If missing, then the Cancel button will be removed.
 
@@ -79,7 +82,7 @@ For anything else, email always works: [denis@peerassembly.com](mailto:denis@pee
 ## License
 
 ```
-Copyright (c) 2012, Denis Hennessy (Peer Assembly - http://peerassembly.com)
+Copyright (c) 2012-2015, Denis Hennessy (Peer Assembly - http://peerassembly.com)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

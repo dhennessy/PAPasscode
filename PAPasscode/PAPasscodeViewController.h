@@ -30,14 +30,17 @@ typedef enum {
 @end
 
 @interface PAPasscodeViewController : UIViewController {
+    NSArray *_installedConstraints;
+    UIView *_inputPanel;
+    NSLayoutConstraint *_keyboardHeightConstraint;
     UIView *contentView;
     NSInteger phase;
     UILabel *promptLabel;
     UILabel *messageLabel;
-    UIImageView *failedImageView;
+    UIView *_failedAttemptsView;
     UILabel *failedAttemptsLabel;
     UITextField *passcodeTextField;
-    UIImageView *digitImageViews[4];
+    UILabel *_digitLabels[4];
     UIImageView *snapshotImageView;
 }
 

@@ -21,7 +21,7 @@
     }
     passcodeViewController.delegate = self;
     passcodeViewController.simple = _simpleSwitch.on;
-    [self presentViewController:passcodeViewController animated:YES completion:nil];
+    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:passcodeViewController] animated:YES completion:nil];
 }
 
 - (IBAction)enterPasscode:(id)sender {
@@ -33,7 +33,7 @@
     passcodeViewController.passcode = _passcodeLabel.text;
     passcodeViewController.alternativePasscode = @"9999";
     passcodeViewController.simple = _simpleSwitch.on;
-    [self presentViewController:passcodeViewController animated:YES completion:nil];
+    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:passcodeViewController] animated:YES completion:nil];
 }
 
 - (IBAction)changePasscode:(id)sender {
@@ -44,7 +44,7 @@
     passcodeViewController.delegate = self;
     passcodeViewController.passcode = _passcodeLabel.text;
     passcodeViewController.simple = _simpleSwitch.on;
-    [self presentViewController:passcodeViewController animated:YES completion:nil];
+    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:passcodeViewController] animated:YES completion:nil];
 }
 
 #pragma mark - PAPasscodeViewControllerDelegate

@@ -9,22 +9,10 @@
 #import <QuartzCore/QuartzCore.h>
 #import "PAPasscodeViewController.h"
 
-#define NAVBAR_HEIGHT   44
-#define PROMPT_HEIGHT   74
-#define DIGIT_SPACING   10
-#define DIGIT_WIDTH     61
-#define DIGIT_HEIGHT    53
-#define MARKER_WIDTH    16
-#define MARKER_HEIGHT   16
-#define MARKER_X        22
-#define MARKER_Y        18
-#define MESSAGE_HEIGHT  74
-#define FAILED_LCAP     19
-#define FAILED_RCAP     19
-#define FAILED_HEIGHT   26
-#define FAILED_MARGIN   10
-#define TEXTFIELD_MARGIN 8
-#define SLIDE_DURATION  0.3
+static NSString *BulletCharacter = @"\u25CF";
+static NSString *DashCharacter = @"\u2010";
+static NSInteger FailedBackgroundHeight = 24;
+static NSTimeInterval AnimationDuration = 0.3;
 
 @interface PAPasscodeViewController ()
 - (void)cancel:(id)sender;
@@ -67,127 +55,136 @@
     return self;
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)loadView {
-    UIView *view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
-    view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-
-    UINavigationBar *navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, view.bounds.size.width, NAVBAR_HEIGHT)];
-    navigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    navigationBar.items = @[self.navigationItem];
-    [view addSubview:navigationBar];
+    UIView *view = [[UIView alloc] init];
+    view.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
     
-    contentView = [[UIView alloc] initWithFrame:CGRectMake(0, NAVBAR_HEIGHT, view.bounds.size.width, view.bounds.size.height-NAVBAR_HEIGHT)];
-    contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    if (_backgroundView) {
-        [contentView addSubview:_backgroundView];
-    }
-    contentView.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
+    // contentView is set to the visible area (below nav bar, above keyboard)
+    contentView = [[UIView alloc] init];
+    contentView.translatesAutoresizingMaskIntoConstraints = NO;
+    contentView.backgroundColor = [UIColor clearColor];
     [view addSubview:contentView];
-    
-    CGFloat panelWidth = DIGIT_WIDTH*4+DIGIT_SPACING*3;
-    if (_simple) {
-        UIView *digitPanel = [[UIView alloc] initWithFrame:CGRectMake(0, 0, panelWidth, DIGIT_HEIGHT)];
-        digitPanel.frame = CGRectOffset(digitPanel.frame, (contentView.bounds.size.width-digitPanel.bounds.size.width)/2, PROMPT_HEIGHT);
-        digitPanel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
-        [contentView addSubview:digitPanel];
-        
-        UIImage *backgroundImage = [UIImage imageNamed:@"papasscode_background"];
-        UIImage *markerImage = [UIImage imageNamed:@"papasscode_marker"];
-        CGFloat xLeft = 0;
-        for (int i=0;i<4;i++) {
-            UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:backgroundImage];
-            backgroundImageView.frame = CGRectOffset(backgroundImageView.frame, xLeft, 0);
-            [digitPanel addSubview:backgroundImageView];
-            digitImageViews[i] = [[UIImageView alloc] initWithImage:markerImage];
-            digitImageViews[i].autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
-            digitImageViews[i].frame = CGRectOffset(digitImageViews[i].frame, backgroundImageView.frame.origin.x+MARKER_X, MARKER_Y);
-            [digitPanel addSubview:digitImageViews[i]];
-            xLeft += DIGIT_SPACING + backgroundImage.size.width;
-        }
-        passcodeTextField = [[UITextField alloc] initWithFrame:digitPanel.frame];
-        passcodeTextField.hidden = YES;
-    } else {
-        UIView *passcodePanel = [[UIView alloc] initWithFrame:CGRectMake(0, 0, panelWidth, DIGIT_HEIGHT)];
-        passcodePanel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
-        passcodePanel.frame = CGRectOffset(passcodePanel.frame, (contentView.bounds.size.width-passcodePanel.bounds.size.width)/2, PROMPT_HEIGHT);
-        passcodePanel.frame = CGRectInset(passcodePanel.frame, TEXTFIELD_MARGIN, TEXTFIELD_MARGIN);
-        passcodePanel.layer.borderColor = [UIColor colorWithRed:0.65 green:0.67 blue:0.70 alpha:1.0].CGColor;
-        passcodePanel.layer.borderWidth = 1.0;
-        passcodePanel.layer.cornerRadius = 5.0;
-        passcodePanel.layer.shadowColor = [UIColor whiteColor].CGColor;
-        passcodePanel.layer.shadowOffset = CGSizeMake(0, 1);
-        passcodePanel.layer.shadowOpacity = 1.0;
-        passcodePanel.layer.shadowRadius = 1.0;
-        passcodePanel.backgroundColor = [UIColor whiteColor];
-        [contentView addSubview:passcodePanel];
-        passcodeTextField = [[UITextField alloc] initWithFrame:CGRectInset(passcodePanel.frame, 6, 6)];
-    }
-    passcodeTextField.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
-    passcodeTextField.borderStyle = UITextBorderStyleNone;
-    passcodeTextField.secureTextEntry = YES;
-    passcodeTextField.textColor = [UIColor colorWithRed:0.23 green:0.33 blue:0.52 alpha:1.0];
-    passcodeTextField.keyboardType = UIKeyboardTypeNumberPad;
-    [passcodeTextField addTarget:self action:@selector(passcodeChanged:) forControlEvents:UIControlEventEditingChanged];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showKeyboard:) name:UIKeyboardDidHideNotification object:nil];
-    [contentView addSubview:passcodeTextField];
 
-    promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, contentView.bounds.size.width, PROMPT_HEIGHT)];
-    promptLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    promptLabel.backgroundColor = [UIColor clearColor];
-    promptLabel.textColor = [UIColor colorWithRed:0.30 green:0.34 blue:0.42 alpha:1.0];
-    promptLabel.font = [UIFont boldSystemFontOfSize:17];
-    promptLabel.shadowColor = [UIColor whiteColor];
-    promptLabel.shadowOffset = CGSizeMake(0, 1);
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-    promptLabel.textAlignment = UITextAlignmentCenter;
-#else
+    _inputPanel = [[UIView alloc] init];
+    _inputPanel.translatesAutoresizingMaskIntoConstraints = NO;
+    [contentView addSubview:_inputPanel];
+
+    passcodeTextField = [[UITextField alloc] init];
+    passcodeTextField.translatesAutoresizingMaskIntoConstraints = NO;
+    passcodeTextField.secureTextEntry = YES;
+    [passcodeTextField addTarget:self action:@selector(passcodeChanged:) forControlEvents:UIControlEventEditingChanged];
+
+    [_inputPanel addSubview:passcodeTextField];
+    if (_simple) {
+        UIFont *font = [UIFont fontWithName:@"Courier" size:32];
+        for (int i=0;i<4;i++) {
+            _digitLabels[i] = [[UILabel alloc] init];
+            _digitLabels[i].translatesAutoresizingMaskIntoConstraints = NO;
+            _digitLabels[i].font = font;
+            [_inputPanel addSubview:_digitLabels[i]];
+            _digitLabels[i].text = DashCharacter;
+        }
+        passcodeTextField.hidden = YES;
+        passcodeTextField.keyboardType = UIKeyboardTypeNumberPad;
+    } else {
+        _inputPanel.backgroundColor = [UIColor whiteColor];
+    }
+    
+    promptLabel = [[UILabel alloc] init];
+    promptLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    promptLabel.font = [UIFont systemFontOfSize:15];
     promptLabel.textAlignment = NSTextAlignmentCenter;
-#endif
     promptLabel.numberOfLines = 0;
     [contentView addSubview:promptLabel];
     
-    messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, PROMPT_HEIGHT+DIGIT_HEIGHT, contentView.bounds.size.width, MESSAGE_HEIGHT)];
-    messageLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    messageLabel.backgroundColor = [UIColor clearColor];
-    messageLabel.textColor = [UIColor colorWithRed:0.30 green:0.34 blue:0.42 alpha:1.0];
+    messageLabel = [[UILabel alloc] init];
+    messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
     messageLabel.font = [UIFont systemFontOfSize:14];
-    messageLabel.shadowColor = [UIColor whiteColor];
-    messageLabel.shadowOffset = CGSizeMake(0, 1);
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-    messageLabel.textAlignment = UITextAlignmentCenter;
-#else
     messageLabel.textAlignment = NSTextAlignmentCenter;
-#endif
     messageLabel.numberOfLines = 0;
-	messageLabel.text = _message;
+    messageLabel.text = _message;
     [contentView addSubview:messageLabel];
-        
-    UIImage *failedBg = [[UIImage imageNamed:@"papasscode_failed_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, FAILED_LCAP, 0, FAILED_RCAP)];
-    failedImageView = [[UIImageView alloc] initWithImage:failedBg];
-    failedImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
-    failedImageView.hidden = YES;
-    [contentView addSubview:failedImageView];
     
-    failedAttemptsLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    failedAttemptsLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
-    failedAttemptsLabel.backgroundColor = [UIColor clearColor];
+    _failedAttemptsView = [[UIView alloc] init];
+    _failedAttemptsView.translatesAutoresizingMaskIntoConstraints = NO;
+    _failedAttemptsView.backgroundColor = [UIColor colorWithRed:0.75 green:0.16 blue:0.16 alpha:1];
+    _failedAttemptsView.layer.cornerRadius = FailedBackgroundHeight/2;
+    _failedAttemptsView.layer.borderColor = [UIColor colorWithRed:0.55 green:0 blue:0 alpha:1].CGColor;
+    _failedAttemptsView.layer.borderWidth = 0.5;
+    _failedAttemptsView.hidden = YES;
+    [contentView addSubview:_failedAttemptsView];
+    
+    failedAttemptsLabel = [[UILabel alloc] init];
+    failedAttemptsLabel.translatesAutoresizingMaskIntoConstraints = NO;
     failedAttemptsLabel.textColor = [UIColor whiteColor];
-    failedAttemptsLabel.font = [UIFont boldSystemFontOfSize:15];
-    failedAttemptsLabel.shadowColor = [UIColor blackColor];
-    failedAttemptsLabel.shadowOffset = CGSizeMake(0, -1);
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-    failedAttemptsLabel.textAlignment = UITextAlignmentCenter;
-#else
+    failedAttemptsLabel.font = [UIFont systemFontOfSize:14];
     failedAttemptsLabel.textAlignment = NSTextAlignmentCenter;
-#endif
-    failedAttemptsLabel.hidden = YES;
-    [contentView addSubview:failedAttemptsLabel];
-    
+    [_failedAttemptsView addSubview:failedAttemptsLabel];
+
     self.view = view;
+    [self.view setNeedsUpdateConstraints];
 }
 
-- (void)showKeyboard:(id)sender {
-    [passcodeTextField becomeFirstResponder];
+- (void)updateViewConstraints {
+    [super updateViewConstraints];
+    
+    if (_installedConstraints) {
+        [self.view removeConstraints:_installedConstraints];
+    }
+    NSMutableArray *constraints = [[NSMutableArray alloc] init];
+    NSDictionary *views = @{
+                            @"contentView": contentView,
+                            @"inputPanel": _inputPanel,
+                            @"failedAttemptsLabel": failedAttemptsLabel,
+                            @"failedAttemptsView": _failedAttemptsView,
+                            @"messageLabel": messageLabel,
+                            @"passcodeTextField": passcodeTextField,
+                            @"promptLabel": promptLabel,
+                            };
+    [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[contentView]|" options:0 metrics:nil views:views]];
+    [constraints addObject:[NSLayoutConstraint constraintWithItem:contentView
+                                                        attribute:NSLayoutAttributeTop
+                                                        relatedBy:NSLayoutRelationEqual
+                                                           toItem:self.topLayoutGuide
+                                                        attribute:NSLayoutAttributeBottom
+                                                       multiplier:1 constant:0]];
+    _keyboardHeightConstraint = [NSLayoutConstraint constraintWithItem:contentView
+                                                             attribute:NSLayoutAttributeBottom
+                                                             relatedBy:NSLayoutRelationEqual
+                                                                toItem:self.bottomLayoutGuide
+                                                             attribute:NSLayoutAttributeTop
+                                                            multiplier:1 constant:0];
+    [constraints addObject:_keyboardHeightConstraint];
+    [constraints addObject:[NSLayoutConstraint constraintWithItem:_inputPanel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+    
+    if (_simple) {
+        [constraints addObject:[NSLayoutConstraint constraintWithItem:_inputPanel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+        NSDictionary *digits = @{@"d0": _digitLabels[0], @"d1": _digitLabels[1], @"d2": _digitLabels[2], @"d3": _digitLabels[3]};
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[d0]-(w)-[d1]-(w)-[d2]-(w)-[d3]|" options:0 metrics:@{@"w": @(16)} views:digits]];
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[d0]|" options:0 metrics:nil views:digits]];
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[d1]|" options:0 metrics:nil views:digits]];
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[d2]|" options:0 metrics:nil views:digits]];
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[d3]|" options:0 metrics:nil views:digits]];
+    } else {
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[inputPanel]|" options:0 metrics:nil views:views]];
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[passcodeTextField]-|" options:0 metrics:nil views:views]];
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[passcodeTextField]-|" options:0 metrics:nil views:views]];
+    }
+
+    [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[failedAttemptsLabel]-|" options:0 metrics:nil views:views]];
+    [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[failedAttemptsLabel]|" options:0 metrics:nil views:views]];
+
+    [constraints addObject:[NSLayoutConstraint constraintWithItem:_failedAttemptsView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+    [constraints addObject:[NSLayoutConstraint constraintWithItem:messageLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+    [constraints addObject:[NSLayoutConstraint constraintWithItem:promptLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+    [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[promptLabel]-[inputPanel]-[messageLabel]-[failedAttemptsView(h)]" options:0 metrics:@{@"h": @(FailedBackgroundHeight)} views:views]];
+
+    _installedConstraints = constraints;
+    [self.view addConstraints:_installedConstraints];
 }
 
 - (void)viewDidLoad {
@@ -204,12 +201,17 @@
     if (_failedAttempts > 0) {
         [self showFailedAttempts];
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillChangeFrameNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self showScreenForPhase:0 animated:NO];
     [passcodeTextField becomeFirstResponder];
+    [self.view layoutIfNeeded];
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
@@ -221,6 +223,28 @@
 }
 
 #pragma mark - implementation helpers
+
+- (void)keyboardWillShow:(NSNotification *)notification {
+    NSDictionary *info = [notification userInfo];
+    NSValue *kbFrame = [info objectForKey:UIKeyboardFrameEndUserInfoKey];
+    NSTimeInterval animationDuration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    CGRect keyboardFrame = [kbFrame CGRectValue];
+    
+    _keyboardHeightConstraint.constant = -keyboardFrame.size.height;
+    [UIView animateWithDuration:animationDuration animations:^{
+        [self.view layoutIfNeeded];
+    }];
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification {
+    NSDictionary *info = [notification userInfo];
+    NSTimeInterval animationDuration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    
+    _keyboardHeightConstraint.constant = 0;
+    [UIView animateWithDuration:animationDuration animations:^{
+        [self.view layoutIfNeeded];
+    }];
+}
 
 - (void)handleCompleteField {
     NSString *text = passcodeTextField.text;
@@ -272,7 +296,7 @@
                 }
             } else if (phase == 1) {
                 _passcode = text;
-                messageLabel.text = @"";
+                messageLabel.text = nil;
                 [self showScreenForPhase:2 animated:YES];
             } else {
                 if ([text isEqualToString:_passcode]) {
@@ -298,28 +322,18 @@
 
 - (void)resetFailedAttempts {
     messageLabel.hidden = NO;
-    failedImageView.hidden = YES;
-    failedAttemptsLabel.hidden = YES;
+    _failedAttemptsView.hidden = YES;
     _failedAttempts = 0;
 }
 
 - (void)showFailedAttempts {
     messageLabel.hidden = YES;
-    failedImageView.hidden = NO;
-    failedAttemptsLabel.hidden = NO;
+    _failedAttemptsView.hidden = NO;
     if (_failedAttempts == 1) {
         failedAttemptsLabel.text = NSLocalizedString(@"1 Failed Passcode Attempt", nil);
     } else {
         failedAttemptsLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%d Failed Passcode Attempts", nil), _failedAttempts];
     }
-    [failedAttemptsLabel sizeToFit];
-    CGFloat bgWidth = failedAttemptsLabel.bounds.size.width + FAILED_MARGIN*2;
-    CGFloat x = floor((contentView.bounds.size.width-bgWidth)/2);
-    CGFloat y = PROMPT_HEIGHT+DIGIT_HEIGHT+floor((MESSAGE_HEIGHT-FAILED_HEIGHT)/2);
-    failedImageView.frame = CGRectMake(x, y, bgWidth, FAILED_HEIGHT);
-    x = failedImageView.frame.origin.x+FAILED_MARGIN;
-    y = failedImageView.frame.origin.y+floor((failedImageView.bounds.size.height-failedAttemptsLabel.frame.size.height)/2);
-    failedAttemptsLabel.frame = CGRectMake(x, y, failedAttemptsLabel.bounds.size.width, failedAttemptsLabel.bounds.size.height);
 }
 
 - (void)passcodeChanged:(id)sender {
@@ -329,7 +343,7 @@
             text = [text substringToIndex:4];
         }
         for (int i=0;i<4;i++) {
-            digitImageViews[i].hidden = i >= [text length];
+            _digitLabels[i].text = (i >= [text length]) ? DashCharacter : BulletCharacter;
         }
         if ([text length] == 4) {
             [self handleCompleteField];
@@ -388,21 +402,17 @@
             break;
     }
     for (int i=0;i<4;i++) {
-        digitImageViews[i].hidden = YES;
+        _digitLabels[i].text = DashCharacter;
     }
     if (animated) {
         contentView.frame = CGRectOffset(contentView.frame, contentView.frame.size.width*dir, 0);
-        [UIView animateWithDuration:SLIDE_DURATION animations:^() {
+        [UIView animateWithDuration:AnimationDuration animations:^() {
             contentView.frame = CGRectOffset(contentView.frame, -contentView.frame.size.width*dir, 0);
         } completion:^(BOOL finished) {
             [snapshotImageView removeFromSuperview];
             snapshotImageView = nil;
         }];
     }
-}
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end
