@@ -1,6 +1,7 @@
 Pod::Spec.new do |s|
   s.name     = 'PAPasscode'
   s.version  = '1.0'
+  s.license  = 'BSD'
   s.summary  = 'A Passcode View Controller for iOS similar to the one in Settings.app'
   s.homepage = 'https://github.com/dhennessy/PAPasscode'
   s.authors  = { 'Denis Hennessy' => 'denis@hennessynet.com' }

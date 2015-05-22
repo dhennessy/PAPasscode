@@ -46,7 +46,7 @@ Then invoke the view controller as follows:
 ```objective-c
     PAPasscodeViewController *passcodeViewController = [[PAPasscodeViewController alloc] initForAction:PasscodeActionSet];
     passcodeViewController.delegate = self;
-    [self presentViewController:passcodeViewController animated:YES completion:nil];
+    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:passcodeViewController] animated:YES completion:nil];
 ```
 
 The `initForAction:` allows you to specify the flow you'd like. Possible actions are:
