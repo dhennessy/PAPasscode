@@ -256,6 +256,7 @@ static NSTimeInterval AnimationDuration = 0.3;
                 [self showScreenForPhase:1 animated:YES];
             } else {
                 if ([text isEqualToString:_passcode]) {
+                    [passcodeTextField resignFirstResponder];                    
                     if ([_delegate respondsToSelector:@selector(PAPasscodeViewControllerDidSetPasscode:)]) {
                         [_delegate PAPasscodeViewControllerDidSetPasscode:self];
                     }
