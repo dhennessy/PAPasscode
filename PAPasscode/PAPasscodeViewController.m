@@ -61,7 +61,7 @@ static NSTimeInterval AnimationDuration = 0.3;
 
 - (void)loadView {
     UIView *view = [[UIView alloc] init];
-    view.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
+    view.backgroundColor = [UIColor systemBackgroundColor];
     
     // contentView is set to the visible area (below nav bar, above keyboard)
     contentView = [[UIView alloc] init];
