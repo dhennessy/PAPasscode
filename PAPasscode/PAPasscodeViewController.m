@@ -77,6 +77,8 @@ static NSTimeInterval AnimationDuration = 0.3;
     passcodeTextField.translatesAutoresizingMaskIntoConstraints = NO;
     passcodeTextField.secureTextEntry = YES;
     [passcodeTextField addTarget:self action:@selector(passcodeChanged:) forControlEvents:UIControlEventEditingChanged];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showKeyboard:)
+                                                 name:UIKeyboardDidHideNotification object:nil];
 
     [_inputPanel addSubview:passcodeTextField];
     if (_simple) {
@@ -187,6 +189,10 @@ static NSTimeInterval AnimationDuration = 0.3;
     [self.view addConstraints:_installedConstraints];
 }
 
+- (void)showKeyboard:(id)sender {
+    [passcodeTextField becomeFirstResponder];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -223,6 +229,7 @@ static NSTimeInterval AnimationDuration = 0.3;
 }
 
 - (void)cancel:(id)sender {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_delegate PAPasscodeViewControllerDidCancel:self];
 }
 
