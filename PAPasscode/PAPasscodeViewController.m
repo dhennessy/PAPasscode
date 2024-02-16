@@ -221,6 +221,7 @@ static NSTimeInterval AnimationDuration = 0.3;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[passcodeTextField resignFirstResponder];
 }
 
